@@ -1,37 +1,96 @@
-import websocket
-import threading
-import time
-from base64 import b64encode as enc
-import json
-import math
-import requests
+try:
+    import websocket
+    import threading
+    import time
+    from base64 import b64encode as enc
+    import json
+    import math
+    import requests
 
-apikey = 'b2a1a39c-5a1c-4fcd-83f4-64e5a68cf2f9'.encode('ascii')
+except Exception as e:
+    print("Some Modules are Missing {}".format(e))
 
-device_1 = '5dd3d92bc567e3296d8b179a'
 
-blynk_auth = 'ZPbgCab2ZVSZi-M54vroCC-d8mjf0Jf2'
+class SecretKey(object):
 
-def hsv2rgb(h, s, v):
-    h = float(h)
-    s = float(s)
-    v = float(v)
-    h60 = h / 60.0
-    h60f = math.floor(h60)
-    hi = int(h60f) % 6
-    f = h60 - h60f
-    p = v * (1 - s)
-    q = v * (1 - f * s)
-    t = v * (1 - (1 - f) * s)
-    r, g, b = 0, 0, 0
-    if hi == 0: r, g, b = v, t, p
-    elif hi == 1: r, g, b = q, v, p
-    elif hi == 2: r, g, b = p, v, t
-    elif hi == 3: r, g, b = p, q, v
-    elif hi == 4: r, g, b = t, p, v
-    elif hi == 5: r, g, b = v, p, q
-    r, g, b = int(r * 255), int(g * 255), int(b * 255)
-    return (r, g, b)
+    def __init__(self, api_key='', device_1 = '', blynk_auth = ''):
+        self.api_key = api_key.encode('ascii')
+        self.device_1 = device_1
+        self.blynk_id = blynk_auth
+
+
+
+class BusinessLogic(object):
+
+    def __init__(self, secret):
+        secret_key = secret
+
+    def selectLogic(self, deviceId, action, value):
+
+        if action == 'setPowerState':
+            self.onSetPowerState(deviceId, value)
+        elif action == 'SetColor':
+            self.onSetColor(deviceId, value)
+        elif action == 'SetBrightness':
+            self.onSetBrightness(deviceId, value)
+        elif action == 'test':
+            pass
+
+    def onSetPowerState(self, deviceId, value):
+
+        if(deviceId == secret_key.device_1):
+            if(value == 'ON'):
+                on = RequestBlynk(url= "http://188.166.206.43/", secret=secret_key, pin='v0', state=1)
+                on.makeRequests()
+            else:
+                off = RequestBlynk(url= "http://188.166.206.43/", secret=secret_key,pin='v0', state=0)
+                off.makeRequests()
+
+    def onSetColor(self, deviceId, value):
+        if(deviceId == device_1):
+
+            r, g , b = HSVtoRGB.hsv2rgb(value['hue'],
+                                        value['saturation'],
+                                        value['brightness'] )
+
+            print(r ,g ,b)
+            writeColor(r ,g ,b)
+
+    def onSetBrightness(self, deviceId, value):
+        if(deviceId == device_1):
+            changeBrighness(value)
+
+
+
+class RequestBlynk(object):
+
+    def __init__(self, url, secret , pin , state):
+        self.url = url
+        self.secret= SecretKey(api_key='b2a1a39c-5a1c-4fcd-83f4-64e5a68cf2f9',device_1='5dd3d92bc567e3296d8b179a',blynk_auth='ZPbgCab2ZVSZi-M54vroCC-d8mjf0Jf2' )
+        self.pin = pin
+        self.completeUrl =  self.url + str(self.secret.blynk_id) + '/update/{}'.format(self.pin)
+        self.state = state
+        self.querystring = {
+            "value":self.state}
+
+        self.header = {
+            'User-Agent': "PostmanRuntime/7.18.0",
+            'Accept': "*/*",
+            'Host': "blynk-cloud.com",
+            'Accept-Encoding': "gzip, deflate",
+            'Connection': "keep-alive",
+            'cache-control': "no-cache"
+        }
+
+    def makeRequests(self):
+        """
+        Makes the Request to Blynk Server
+        """
+        response = requests.request("GET",
+                                    self.completeUrl,headers=self.header,params=self.querystring)
+        print(response)
+
+
 
 def changePwrState(state):
     url = 'http://188.166.206.43/' + str(blynk_auth) + '/update/v0'
@@ -45,113 +104,82 @@ def changePwrState(state):
         'Accept-Encoding': "gzip, deflate",
         'Connection': "keep-alive",
         'cache-control': "no-cache"
-        }
+    }
 
     response = requests.request("GET", url, headers=headers, params=querystring)
 
     print(response.text)
 
-def changeBrighness(bright):
-    url = 'http://188.166.206.43/' + str(blynk_auth) + '/update/v5'
+class HSVtoRGB(object):
+    def __init__(self):
+        pass
 
-    querystring = {"value":bright}
+    @staticmethod
+    def hsv2rgb(h, s, v):
+        h = float(h)
+        s = float(s)
+        v = float(v)
+        h60 = h / 60.0
+        h60f = math.floor(h60)
+        hi = int(h60f) % 6
+        f = h60 - h60f
+        p = v * (1 - s)
+        q = v * (1 - f * s)
+        t = v * (1 - (1 - f) * s)
+        r, g, b = 0, 0, 0
+        if hi == 0: r, g, b = v, t, p
+        elif hi == 1: r, g, b = q, v, p
+        elif hi == 2: r, g, b = p, v, t
+        elif hi == 3: r, g, b = p, q, v
+        elif hi == 4: r, g, b = t, p, v
+        elif hi == 5: r, g, b = v, p, q
+        r, g, b = int(r * 255), int(g * 255), int(b * 255)
+        return (r, g, b)
 
-    headers = {
-        'User-Agent': "PostmanRuntime/7.18.0",
-        'Accept': "*/*",
-        'Host': "blynk-cloud.com",
-        'Accept-Encoding': "gzip, deflate",
-        'Connection': "keep-alive",
-        'cache-control': "no-cache"
-        }
+class Sinric(object):
 
-    response = requests.request("GET", url, headers=headers, params=querystring)
+    def __init__(self, secret):
+        self.secret = secret
+        self._domainName = 'ws://iot.sinric.com'
+        self._header ={'Authorization:' + enc(b'apikey: ' +self.secret.api_key ).decode('ascii')}
+        self.businesslogic = BusinessLogic(secret)
 
-    print(response.text)
+    @property
+    def start(self):
+        websocket.enableTrace(True)
+        self.ws = websocket.WebSocketApp(
+            self._domainName,
+            header=self._header,
+            on_message=self.on_message,
+            on_error=self.on_error,
+            on_close=self.on_close
+        )
+        self.ws.on_open = self.on_open
+        self.ws.run_forever()
 
-def writeColor(r ,g ,b):
-    url = 'http://188.166.206.43/' + str(blynk_auth) + '/update/v1'
+    def on_message(self, message):  # Callback function on successfull response from server
+        obj = json.loads(message)
+        deviceId = obj['deviceId']
+        action = obj['action']
+        value = obj['value']
+        self.businesslogic.selectLogic(deviceId, action, value)
 
-    querystring = {"value":[r,g,b]}
+    def on_open(self):
+        print('### Initiating new websocket connection ###')
 
-    headers = {
-        'User-Agent': "PostmanRuntime/7.18.0",
-        'Accept': "*/*",
-        'Cache-Control': "no-cache",
-        'Postman-Token': "d001f97e-0181-4e40-8518-56d8890142ec,256ed8fa-93bb-4a16-ad34-96929283b2b0",
-        'Host': "blynk-cloud.com",
-        'Accept-Encoding': "gzip, deflate",
-        'Connection': "keep-alive",
-        'cache-control': "no-cache"
-        }
+    def  on_error(self, error):
+        print(error)
 
-    response = requests.request("GET", url, headers=headers, params=querystring)
-
-    print(response.text)
-
-def onSetPowerState(deviceId, value):
-    if(deviceId == device_1):
-        if(value == 'ON'):
-            changePwrState(1)
-        else:
-            changePwrState(0)
-        
-
-def onSetColor(deviceId, value):
-    if(deviceId == device_1):
-        r ,g ,b = hsv2rgb(value['hue'] , value['saturation'] , value['brightness'])
-        print(r ,g ,b)
-        writeColor(r ,g ,b)
-
-
-    # {'hue': 240, 'saturation': 1, 'brightness': 1}
-
-def onSetBrightness(deviceId, value):
-    if(deviceId == device_1):
-        changeBrighness(value)
-
-def selectionAction(deviceId, action, value):
-    if action == 'setPowerState':
-        onSetPowerState(deviceId, value)
-    elif action == 'SetColor':
-        onSetColor(deviceId, value)
-    elif action == 'SetBrightness':
-        onSetBrightness(deviceId, value)
-    elif action == 'test':
-        print('Received a test command')
-
-def on_message(ws, message):  # Callback function on successfull response from server
-    obj = json.loads(message)
-    deviceId = obj['deviceId']
-    action = obj['action']
-    value = obj['value']
-    selectionAction(deviceId, action, value)
-    # print(message)      #Prints the JSON response 
-
-def on_error(ws, error):
-    print(error)
-
-def on_close(ws):
-    print('### closed ###')
-    time.sleep(2)
-    initiate()
-
-def on_open(ws):
-    print('### Initiating new websocket connection ###')
-
-def initiate():
-    websocket.enableTrace(True)
-
-    ws = websocket.WebSocketApp('ws://iot.sinric.com',
-                                header={
-                                    'Authorization:' + enc(b'apikey: ' + apikey).decode('ascii')},
-                                on_message=on_message,
-                                on_error=on_error,
-                                on_close=on_close)
-    ws.on_open = on_open
-
-    ws.run_forever()
+    def on_close(self):
+        print('### closed ###')
+        time.sleep(2)
+        self.start()
 
 
 if __name__ == '__main__':
-    initiate()
+
+    secret_key = SecretKey(api_key='b2a1a39c-5a1c-4fcd-83f4-64e5a68cf2f9',
+                           device_1='5dd3d92bc567e3296d8b179a',
+                           blynk_auth='ZPbgCab2ZVSZi-M54vroCC-d8mjf0Jf2' )
+    sinric = Sinric(secret_key)
+    sinric.start
