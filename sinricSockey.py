@@ -13,11 +13,10 @@ except Exception as e:
 
 class SecretKey(object):
 
-    def __init__(self, api_key='', device_1 = '', blynk_auth = ''):
+    def __init__(self, api_key='', device_1='', blynk_auth=''):
         self.api_key = api_key.encode('ascii')
         self.device_1 = device_1
         self.blynk_id = blynk_auth
-
 
 
 class BusinessLogic(object):
@@ -40,38 +39,43 @@ class BusinessLogic(object):
 
         if(deviceId == secret_key.device_1):
             if(value == 'ON'):
-                on = RequestBlynk(url= "http://188.166.206.43/", secret=secret_key, pin='v0', state=1)
-                on.makeRequests()
+                on = RequestBlynk(url="http://188.166.206.43/",
+                                  secret=secret_key, pin='v0', value=1)
+                on.makeRequest()
             else:
-                off = RequestBlynk(url= "http://188.166.206.43/", secret=secret_key,pin='v0', state=0)
-                off.makeRequests()
+                off = RequestBlynk(url="http://188.166.206.43/",
+                                   secret=secret_key, pin='v0', value=0)
+                off.makeRequest()
 
     def onSetColor(self, deviceId, value):
-        if(deviceId == device_1):
+        if(deviceId == secret_key.device_1):
+            r, g, b = HSVtoRGB.hsv2rgb(value['hue'],
+                                       value['saturation'],
+                                       value['brightness'])
 
-            r, g , b = HSVtoRGB.hsv2rgb(value['hue'],
-                                        value['saturation'],
-                                        value['brightness'] )
-
-            print(r ,g ,b)
-            writeColor(r ,g ,b)
+            write_color = RequestBlynk(url="http://188.166.206.43/",secret=secret_key,pin='v0',value=[r, g, b])
+            wite_color.makeRequest()
 
     def onSetBrightness(self, deviceId, value):
-        if(deviceId == device_1):
-            changeBrighness(value)
-
+        if(deviceId == secret_key.device_1):
+            write_bright = RequestBlynk(url="http://188.166.206.43/",
+                                        secret=secret_key,
+                                        pin='v0',
+                                        value=value)
+            write_bright.makeRequest
 
 
 class RequestBlynk(object):
 
-    def __init__(self, url, secret , pin , state):
+    def __init__(self, url, secret, pin, value):
         self.url = url
-        self.secret= SecretKey(api_key='b2a1a39c-5a1c-4fcd-83f4-64e5a68cf2f9',device_1='5dd3d92bc567e3296d8b179a',blynk_auth='ZPbgCab2ZVSZi-M54vroCC-d8mjf0Jf2' )
+        self.secret = SecretKey(api_key='b2a1a39c-5a1c-4fcd-83f4-64e5a68cf2f9',
+                                device_1='5dd3d92bc567e3296d8b179a', blynk_auth='ZPbgCab2ZVSZi-M54vroCC-d8mjf0Jf2')
         self.pin = pin
-        self.completeUrl =  self.url + str(self.secret.blynk_id) + '/update/{}'.format(self.pin)
-        self.state = state
+        self.completeUrl = self.url + \
+            str(self.secret.blynk_id) + '/update/{}'.format(self.pin)
         self.querystring = {
-            "value":self.state}
+            "value": value}
 
         self.header = {
             'User-Agent': "PostmanRuntime/7.18.0",
@@ -82,33 +86,13 @@ class RequestBlynk(object):
             'cache-control': "no-cache"
         }
 
-    def makeRequests(self):
+    def makeRequest(self):
         """
         Makes the Request to Blynk Server
         """
         response = requests.request("GET",
-                                    self.completeUrl,headers=self.header,params=self.querystring)
+                                    self.completeUrl, headers=self.header, params=self.querystring)
         print(response)
-
-
-
-def changePwrState(state):
-    url = 'http://188.166.206.43/' + str(blynk_auth) + '/update/v0'
-
-    querystring = {"value":state}
-
-    headers = {
-        'User-Agent': "PostmanRuntime/7.18.0",
-        'Accept': "*/*",
-        'Host': "blynk-cloud.com",
-        'Accept-Encoding': "gzip, deflate",
-        'Connection': "keep-alive",
-        'cache-control': "no-cache"
-    }
-
-    response = requests.request("GET", url, headers=headers, params=querystring)
-
-    print(response.text)
 
 class HSVtoRGB(object):
     def __init__(self):
@@ -127,21 +111,29 @@ class HSVtoRGB(object):
         q = v * (1 - f * s)
         t = v * (1 - (1 - f) * s)
         r, g, b = 0, 0, 0
-        if hi == 0: r, g, b = v, t, p
-        elif hi == 1: r, g, b = q, v, p
-        elif hi == 2: r, g, b = p, v, t
-        elif hi == 3: r, g, b = p, q, v
-        elif hi == 4: r, g, b = t, p, v
-        elif hi == 5: r, g, b = v, p, q
+        if hi == 0:
+            r, g, b = v, t, p
+        elif hi == 1:
+            r, g, b = q, v, p
+        elif hi == 2:
+            r, g, b = p, v, t
+        elif hi == 3:
+            r, g, b = p, q, v
+        elif hi == 4:
+            r, g, b = t, p, v
+        elif hi == 5:
+            r, g, b = v, p, q
         r, g, b = int(r * 255), int(g * 255), int(b * 255)
         return (r, g, b)
+
 
 class Sinric(object):
 
     def __init__(self, secret):
         self.secret = secret
         self._domainName = 'ws://iot.sinric.com'
-        self._header ={'Authorization:' + enc(b'apikey: ' +self.secret.api_key ).decode('ascii')}
+        self._header = {'Authorization:' +
+                        enc(b'apikey: ' + self.secret.api_key).decode('ascii')}
         self.businesslogic = BusinessLogic(secret)
 
     @property
@@ -167,7 +159,7 @@ class Sinric(object):
     def on_open(self):
         print('### Initiating new websocket connection ###')
 
-    def  on_error(self, error):
+    def on_error(self, error):
         print(error)
 
     def on_close(self):
@@ -180,6 +172,6 @@ if __name__ == '__main__':
 
     secret_key = SecretKey(api_key='b2a1a39c-5a1c-4fcd-83f4-64e5a68cf2f9',
                            device_1='5dd3d92bc567e3296d8b179a',
-                           blynk_auth='ZPbgCab2ZVSZi-M54vroCC-d8mjf0Jf2' )
+                           blynk_auth='ZPbgCab2ZVSZi-M54vroCC-d8mjf0Jf2')
     sinric = Sinric(secret_key)
     sinric.start
