@@ -76,8 +76,8 @@ class RequestBlynk(object):
         self.pin = pin
         # self.completeUrl = self.host + \
         #     str(self.secret.blynk_id) + '/update/{}'.format(self.pin)
-        #Using F-String to format the host string
-        self.complete_url = f'https://{self.host}/{self.secret.blynk_id}/update/{self.pin}'
+        #Using F-String to format the format the string
+        self.complete_url = f'http://{self.host}/{self.secret.blynk_id}/update/{self.pin}'
         self.querystring = {
             "value": value}
 
@@ -95,9 +95,12 @@ class RequestBlynk(object):
         Makes the Request to Blynk Server
         """
         response = requests.request("GET",
-                                    self.complete_url, headers=self.header, params=self.querystring)
-        print(response)
-
+                                    self.complete_url,
+                                    headers=self.header, 
+                                    params=self.querystring)
+        print(f'Corresping Blynk Call: \n')
+        print(f' Host: "{self.complete_url}" \n Query: {self.querystring} \n BlynkApp-Pin: {self.pin} \n Response-Code: {response.status_code}')
+        print(f'\n ****************************************************************** \n')
 
 class HSVtoRGB(object):
     def __init__(self):
@@ -159,7 +162,11 @@ class Sinric(object):
         deviceId = obj['deviceId']
         action = obj['action']
         value = obj['value']
+        print(f'\n ****************************************************************** \n')
+        print(f'Data Recieved from Sinric: \n')
+        print(f' Raw-json:{message} \n DeviceId: {deviceId} \n Action: {action} \n Value: {value} \n')
         self.businesslogic.selectLogic(deviceId, action, value)
+        
 
     def on_open(self):
         print('### Initiating new websocket connection ###')
