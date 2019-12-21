@@ -1,12 +1,12 @@
 try:
-    import websocket
-    import threading
     import time
-    from base64 import b64encode as enc
     import json
     import math
-    import requests
+    import threading
+    from base64 import b64encode as enc
 
+    import requests
+    import websocket
 except Exception as e:
     print("Some Libraries are Missing {}".format(e))
 
@@ -39,11 +39,11 @@ class BusinessLogic(object):
 
         if(deviceId == self.secret_key.device_1):
             if(value == 'ON'):
-                on = RequestBlynk(url="http://188.166.206.43/",
+                on = RequestBlynk(host="188.166.206.43",
                                   secret=self.secret_key, pin='v0', value=1)
                 on.makeRequest()
             else:
-                off = RequestBlynk(url="http://188.166.206.43/",
+                off = RequestBlynk(host="188.166.206.43",
                                    secret=self.secret_key, pin='v0', value=0)
                 off.makeRequest()
 
@@ -53,7 +53,7 @@ class BusinessLogic(object):
                                        value['saturation'],
                                        value['brightness'])
 
-            write_color = RequestBlynk(url="http://188.166.206.43/",
+            write_color = RequestBlynk(host="188.166.206.43",
                                        secret=self.secret_key,
                                        pin='v1',
                                        value=[r, g, b])
@@ -61,7 +61,7 @@ class BusinessLogic(object):
 
     def onSetBrightness(self, deviceId, value):
         if(deviceId == secret_key.device_1):
-            write_bright = RequestBlynk(url="http://188.166.206.43/",
+            write_bright = RequestBlynk(host="188.166.206.43",
                                         secret=self.secret_key,
                                         pin='v5',
                                         value=value)
@@ -70,12 +70,14 @@ class BusinessLogic(object):
 
 class RequestBlynk(object):
 
-    def __init__(self, url, secret, pin, value):
-        self.url = url
+    def __init__(self, host, secret, pin, value):
+        self.host = host
         self.secret = secret
         self.pin = pin
-        self.completeUrl = self.url + \
-            str(self.secret.blynk_id) + '/update/{}'.format(self.pin)
+        # self.completeUrl = self.host + \
+        #     str(self.secret.blynk_id) + '/update/{}'.format(self.pin)
+        #Using F-String to format the host string
+        self.complete_url = f'https://{self.host}/{self.secret.blynk_id}/update/{self.pin}'
         self.querystring = {
             "value": value}
 
@@ -93,7 +95,7 @@ class RequestBlynk(object):
         Makes the Request to Blynk Server
         """
         response = requests.request("GET",
-                                    self.completeUrl, headers=self.header, params=self.querystring)
+                                    self.complete_url, headers=self.header, params=self.querystring)
         print(response)
 
 
