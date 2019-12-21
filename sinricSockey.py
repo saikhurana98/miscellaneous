@@ -8,7 +8,7 @@ try:
     import requests
 
 except Exception as e:
-    print("Some Modules are Missing {}".format(e))
+    print("Some Libraries are Missing {}".format(e))
 
 
 class SecretKey(object):
@@ -22,7 +22,7 @@ class SecretKey(object):
 class BusinessLogic(object):
 
     def __init__(self, secret):
-        secret_key = secret
+        self.secret_key = secret
 
     def selectLogic(self, deviceId, action, value):
 
@@ -37,40 +37,42 @@ class BusinessLogic(object):
 
     def onSetPowerState(self, deviceId, value):
 
-        if(deviceId == secret_key.device_1):
+        if(deviceId == self.secret_key.device_1):
             if(value == 'ON'):
                 on = RequestBlynk(url="http://188.166.206.43/",
-                                  secret=secret_key, pin='v0', value=1)
+                                  secret=self.secret_key, pin='v0', value=1)
                 on.makeRequest()
             else:
                 off = RequestBlynk(url="http://188.166.206.43/",
-                                   secret=secret_key, pin='v0', value=0)
+                                   secret=self.secret_key, pin='v0', value=0)
                 off.makeRequest()
 
     def onSetColor(self, deviceId, value):
-        if(deviceId == secret_key.device_1):
+        if(deviceId == self.secret_key.device_1):
             r, g, b = HSVtoRGB.hsv2rgb(value['hue'],
                                        value['saturation'],
                                        value['brightness'])
 
-            write_color = RequestBlynk(url="http://188.166.206.43/",secret=secret_key,pin='v0',value=[r, g, b])
-            wite_color.makeRequest()
+            write_color = RequestBlynk(url="http://188.166.206.43/",
+                                       secret=self.secret_key,
+                                       pin='v1',
+                                       value=[r, g, b])
+            write_color.makeRequest()
 
     def onSetBrightness(self, deviceId, value):
         if(deviceId == secret_key.device_1):
             write_bright = RequestBlynk(url="http://188.166.206.43/",
-                                        secret=secret_key,
-                                        pin='v0',
+                                        secret=self.secret_key,
+                                        pin='v5',
                                         value=value)
-            write_bright.makeRequest
+            write_bright.makeRequest()
 
 
 class RequestBlynk(object):
 
     def __init__(self, url, secret, pin, value):
         self.url = url
-        self.secret = SecretKey(api_key='b2a1a39c-5a1c-4fcd-83f4-64e5a68cf2f9',
-                                device_1='5dd3d92bc567e3296d8b179a', blynk_auth='ZPbgCab2ZVSZi-M54vroCC-d8mjf0Jf2')
+        self.secret = secret
         self.pin = pin
         self.completeUrl = self.url + \
             str(self.secret.blynk_id) + '/update/{}'.format(self.pin)
@@ -93,6 +95,7 @@ class RequestBlynk(object):
         response = requests.request("GET",
                                     self.completeUrl, headers=self.header, params=self.querystring)
         print(response)
+
 
 class HSVtoRGB(object):
     def __init__(self):
