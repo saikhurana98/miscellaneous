@@ -3,8 +3,8 @@ import time
 from datetime import datetime
 
 url = "http://10.1.0.100:8090/login.xml"
-username = "auni12345"
-password = "Welcome1"
+username = "physics.lab1"
+password = "Pa$$word#19"
 update_interval = 1800
 
 def login():
@@ -23,14 +23,20 @@ def login():
     return(response)
 
 def main():
-    login()
+    try:
+        login()
+    except :
+        pass
     start = datetime.strptime(str(datetime.now()),"%Y-%m-%d %H:%M:%S.%f")
     while True:
         time.sleep(1)
         end = datetime.strptime(str(datetime.now()),"%Y-%m-%d %H:%M:%S.%f")
         diff = end - start
         if (diff.seconds >= update_interval):
-            login()
+            try:
+                login()
+            except:
+                pass
             start = datetime.strptime(str(datetime.now()),"%Y-%m-%d %H:%M:%S.%f")
         
 

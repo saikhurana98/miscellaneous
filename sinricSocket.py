@@ -103,9 +103,11 @@ def onSetColor(deviceId, value):
         print(r ,g ,b)
         writeColor(r ,g ,b)
 
-
     # {'hue': 240, 'saturation': 1, 'brightness': 1}
 
+def onSetColorTemperature(deviceId , value):
+    if(deviceId == device_1):
+        writeColor(255, 255, 255)
 def onSetBrightness(deviceId, value):
     if(deviceId == device_1):
         changeBrighness(value)
@@ -117,6 +119,8 @@ def selectionAction(deviceId, action, value):
         onSetColor(deviceId, value)
     elif action == 'SetBrightness':
         onSetBrightness(deviceId, value)
+    elif action == 'SetColorTemperature':
+        onSetColorTemperature(deviceId, value)
     elif action == 'test':
         print('Received a test command')
 
@@ -126,7 +130,7 @@ def on_message(ws, message):  # Callback function on successfull response from s
     action = obj['action']
     value = obj['value']
     selectionAction(deviceId, action, value)
-    # print(message)      #Prints the JSON response 
+    print(message)      #Prints the JSON response 
 
 def on_error(ws, error):
     print(error)
