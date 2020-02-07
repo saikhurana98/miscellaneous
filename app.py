@@ -12,14 +12,13 @@ def onPowerState(did, state):
 
 def onSetBrightness(did, state):
     # Alexa set device brightness to 40%
-    print(did, 'BrightnessLevel : ', state)
+    changeBrighness(blynkIdArr[index], slidePinArr[index], state)
     return True, state
 
 
 def onAdjustBrightness(did, state):
     # Alexa increase/decrease device brightness by 44
     index = deviceIdArr.index(did)
-    changeBrighness(blynkIdArr[index], slidePinArr[index], state)
     return True, state
 
 
