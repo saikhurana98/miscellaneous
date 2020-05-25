@@ -9,16 +9,18 @@ from credentials import (
     rgbPinArr,
     slidePinArr,
     thermpPinArr,
+    acId,
 )
 from time import sleep
 import requests
 
+ac_temp = 24
 
 def onPowerState(did, state):
     # Alexa, turn ON/OFF Device
     index = deviceIdArr.index(did)
     changePwrState(blynkIdArr[index], pwrPinArr[index], state)
-    print(f'Device ID: {did} \nStatue: {state}')
+    print(f' Device ID: {did} \nS tatue: {state}')
     return True, state
 
 
@@ -57,16 +59,17 @@ def onDecreaseColorTemperature(deviceId, value):
 
 
 def onTargetTemperature(deviceId, value):
-    print(f"Device-ID: {deviceId} \n Value: {value} \n")
+    print(f" Device-ID: {deviceId} \n Value: {value} \n")
     index = deviceIdArr.index(deviceId)
+    ac_temp = value
     setTemp(blynkIdArr[index], thermpPinArr[index], value)
     return True, value
 
 
 def Events():
-    # client.event_handler.raiseEvent(switchId, 'setPowerState',data={'state': 'On'})
-    pass
-
+    while True:
+        client.event_handler.raiseEvent(acId, 'targetTemperature', data={'value': ac_temp})
+        pass
 
 event_callback = {"Events": Events}
 
@@ -161,14 +164,13 @@ def setTemp(blynk_auth, pin, temp):
     response = requests.request(
         "GET", url, headers=headers, params=querystring)
 
-
 if __name__ == "__main__":
     client = SinricPro(
         appKey,
         deviceIdArr,
         callbacks,
         event_callbacks=event_callback,
-        enable_log=True,
+        enable_log=False,
         restore_states=False,
         secretKey=secretKey,
     )

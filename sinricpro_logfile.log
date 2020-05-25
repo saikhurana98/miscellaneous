@@ -42,3 +42,21 @@
 2020-05-23 19:40:16.127 | INFO     | sinric._sinricprosocket:receiveMessage:53 - Request : {"header":{"payloadVersion":2,"signatureVersion":1},"payload":{"action":"setPowerState","clientId":"alexa-skill","createdAt":1590243015,"deviceAttributes":[],"deviceId":"5ec9153676b86a477f5e0e05","replyToken":"35956dbd-cb7e-43fd-b9ff-bd0676212b72","type":"request","value":{"state":"On"}},"signature":{"HMAC":"lzRUiOIxG0f3ePEBSIBjo6zHzuKWeqIDBZmnNi+AFH4="}}
 2020-05-23 19:40:16.332 | INFO     | sinric._cbhandler:handleResponse:62 - Response : {"header": {"payloadVersion": 2, "signatureVersion": 1}, "payload": {"action": "setPowerState", "clientId": "alexa-skill", "createdAt": 1590243016, "deviceId": "5ec9153676b86a477f5e0e05", "message": "OK", "replyToken": "35956dbd-cb7e-43fd-b9ff-bd0676212b72", "success": true, "type": "response", "value": {"state": "On"}}, "signature": {"HMAC": "pvx25hdksxoS9eBXnwdEswyNbtVXhfWn04CN7lCnxYo="}}
 2020-05-23 19:41:09.147 | ERROR    | sinric._sinricpro:handle_all:70 - Keyboard Interrupt
+2020-05-25 18:34:55.856 | SUCCESS  | sinric._sinricprosocket:connect:40 - Connected
+2020-05-25 18:34:55.868 | SUCCESS  | sinric._sinricprosocket:connect:45 - Timestamp is in sync
+2020-05-25 18:34:58.529 | ERROR    | sinric._sinricpro:handle_all:70 - Keyboard Interrupt
+2020-05-25 19:42:40.933 | SUCCESS  | sinric._sinricprosocket:connect:40 - Connected
+2020-05-25 19:42:40.983 | SUCCESS  | sinric._sinricprosocket:connect:45 - Timestamp is in sync
+2020-05-25 19:44:21.020 | ERROR    | sinric._sinricpro:handle_all:70 - Keyboard Interrupt
+2020-05-25 19:44:24.058 | SUCCESS  | sinric._sinricprosocket:connect:40 - Connected
+2020-05-25 19:44:24.060 | SUCCESS  | sinric._sinricprosocket:connect:45 - Timestamp is in sync
+2020-05-25 19:52:51.086 | ERROR    | sinric._sinricpro:handle_all:70 - Keyboard Interrupt
+2020-05-25 19:52:53.515 | SUCCESS  | sinric._sinricprosocket:connect:40 - Connected
+2020-05-25 19:52:53.517 | SUCCESS  | sinric._sinricprosocket:connect:45 - Timestamp is in sync
+2020-05-25 19:54:04.446 | ERROR    | sinric._sinricpro:handle_all:70 - Keyboard Interrupt
+2020-05-25 19:54:06.222 | SUCCESS  | sinric._sinricprosocket:connect:40 - Connected
+2020-05-25 19:54:06.224 | SUCCESS  | sinric._sinricprosocket:connect:45 - Timestamp is in sync
+2020-05-25 19:54:59.539 | ERROR    | sinric._sinricpro:handle_all:70 - Keyboard Interrupt
+2020-05-25 19:55:01.418 | SUCCESS  | sinric._sinricprosocket:connect:40 - Connected
+2020-05-25 19:55:01.420 | SUCCESS  | sinric._sinricprosocket:connect:45 - Timestamp is in sync
+2020-05-25 20:00:36.837 | ERROR    | sinric._sinricpro:handle_all:70 - Keyboard Interrupt
