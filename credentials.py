@@ -16,5 +16,5 @@ acBlyniId = '85d4f18fda6946e8a4fafca8d185bf60'
 blynkIdArr = [switchBlynkId, light1BlynkId, light2BlynkId, acBlyniId]
 pwrPinArr = ['v2', 'v0', 'v0', 'v4']
 thermpPinArr = [None, None, None, 'V5']
-slidePinArr = [None, 'v5', 'v5']
-rgbPinArr = [None, 'v1', 'v1']
+slidePinArr = [None, 'v5', 'v5', None]
+rgbPinArr = [None, 'v1', 'v1', None]
