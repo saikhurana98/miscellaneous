@@ -1,7 +1,6 @@
 #!/usr/bin/pyton3
 '''
-Documentatino
-
+Documentation 
 '''
 
 import requests
@@ -9,9 +8,8 @@ from requests.exceptions import HTTPError
 
 
 class Blynk:
-    '''
-    Widget Class
-    '''
+
+    ''' Widget Class '''
 
     def __init__(self, server, auth, pin, raise_exceptions=False):
         self.server = server
@@ -20,9 +18,9 @@ class Blynk:
         self.raise_exceptions = raise_exceptions
 
     def get_value(self):
-        '''
-        Get the current state of the pin
-        '''
+        
+        ''' Get the current state of the pin '''
+
         url = f'http://{self.server}/{self.auth}/get/{self.pin}'
 
         headers = {
@@ -40,9 +38,9 @@ class Blynk:
             return False
 
     def get_project(self):
-        '''
-        Returns project connected
-        '''
+
+        ''' Returns project connected '''
+
         url = f'http://{self.server}/{self.auth}/project'
 
         headers = {
@@ -58,9 +56,9 @@ class Blynk:
             return False
 
     def write_value(self, value):
-        '''
-        Write a value to a pin
-        '''
+
+        ''' Write a value to a pin '''
+
         url = f"http://{self.server}/{self.auth}/update/{self.pin}"
 
         querystring = {"value": list(value)}
@@ -80,9 +78,9 @@ class Blynk:
 
     @property
     def is_hardware_connected(self):
-        '''
-        return true if Hardware is Online else false
-        '''
+
+        ''' Return true if Hardware is Online else false '''
+
         url = f"http://{self.server}/{self.auth}/isHardwareConnected"
 
         try:
@@ -98,9 +96,9 @@ class Blynk:
 
     @property
     def is_app_connected(self):
-        '''
-        return true if App is connected else false
-        '''
+
+        ''' Return true if App is connected else false '''
+
         url = f"http://{self.server}/{self.auth}/isAppConnected"
 
         try:
@@ -115,9 +113,9 @@ class Blynk:
             return False
 
     def set_property(self, widget_property, value):
-        '''
-        Set Property of a widget
-        '''
+
+        ''' Set Property of a widget '''
+
         url = f"http://{self.server}/{self.auth}/update/{self.pin}"
         querystring = {widget_property: value}
 
