@@ -1,10 +1,10 @@
 # Sinric Credentials
-appKey = '61de13fe-c2b7-48ef-a90a-9adb9d3a5305'
-secretKey = 'b4286c7f-4c70-4150-a115-3d814afd65ce-d43daabd-5be1-4675-b7c7-068eb5004d3a'
-switchId = '5e3261fcf9370215857f9833'
-light1Id = '5e3261a0fe4eb5157d6949eb'
-light2Id = '5e386b13e2e1685360b4bf5b'
-acId = '5ec9153676b86a477f5e0e05'
+appKey = '270645ba-d821-4b11-b5f9-9d5fc232ead3'
+secretKey = '3bf7ee59-2f89-4398-b04d-9f4c0f5b282f-0990355e-ef39-4d8f-8d0b-a82d859f21f4'
+switchId = '5ed59170ea6d706213e52e51'
+light1Id = '5ed59564ea6d706213e52e94'
+light2Id = '5ed595a9ea6d706213e52e99'
+acId = '5ed5951cea6d706213e52e8f'
 
 deviceIdArr = [switchId, light1Id, light2Id, acId]
 

@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 from sinric import SinricPro
 from sinric import SinricProUdp
 from credentials import (
@@ -13,6 +15,9 @@ from credentials import (
 )
 from time import sleep
 import requests
+import sys
+
+print(sys.version)
 
 ac_temp = 24
 
@@ -63,15 +68,18 @@ def onTargetTemperature(deviceId, value):
     index = deviceIdArr.index(deviceId)
     ac_temp = value
     setTemp(blynkIdArr[index], thermpPinArr[index], value)
-    return True, value
+    return True, ac_temp
+
+def onCustom(value):
+    print(f'Payload: {value}')
 
 
 def Events():
+    pass
     while True:
-        client.event_handler.raiseEvent(acId, 'targetTemperature', data={'value': ac_temp})
-        pass
+        # client.event_handler.raiseEvent(acId, 'targetTemperature', data={'value': ac_temp})
+        client.event_handler.raiseEvent(acId, 'currentTemperature', data={'value':ac_temp})
 
-event_callback = {"Events": Events}
 
 callbacks = {
     "powerState": onPowerState,
@@ -82,8 +90,10 @@ callbacks = {
     "increaseColorTemperature": onIncreaseColorTemperature,
     "decreaseColorTemperature": onDecreaseColorTemperature,
     "targetTemperature": onTargetTemperature,
+    "custom_Callback": onCustom,
 }
 
+event_callback = {"Events": Events}
 
 def changePwrState(blynk_auth, pin, state):
     url = f"http://188.166.206.43/{blynk_auth}/update/{pin}"
