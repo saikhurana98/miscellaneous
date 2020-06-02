@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 from sinric import SinricPro
 from sinric import SinricProUdp
